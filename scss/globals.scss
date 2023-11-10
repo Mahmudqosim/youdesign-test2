@@ -1,0 +1,353 @@
+@import "./variables";
+@import "./fonts";
+
+html {
+  font-size: 12px;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media screen and (min-width: 350px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2rem;
+
+  background: $bg-color;
+  color: $text-color;
+
+  font-family: "Poppins", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+}
+
+img {
+  height: 100%;
+  width: auto;
+}
+
+input,
+button,
+textarea {
+  outline: none;
+  border: none;
+  font-family: "Poppins";
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Poppins";
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rating {
+  margin: auto;
+
+  & h2 {
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: -1px;
+    border-bottom: 5px solid #c7cad1;
+    width: fit-content;
+  }
+
+  &-display {
+    font-size: 1em;
+    font-weight: 500;
+    min-height: 1.25em;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    text-align: center;
+  }
+  &-stars {
+    display: flex;
+    padding-bottom: 0.375em;
+    position: relative;
+  }
+  &-star {
+    display: block;
+    overflow: visible;
+    pointer-events: none;
+    width: 2em;
+    height: 2em;
+
+    &-ring,
+    &-fill,
+    &-line,
+    &-stroke {
+      animation-duration: 1s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+    &-ring,
+    &-fill,
+    &-line {
+      stroke: $yellow;
+    }
+    &-fill {
+      fill: $yellow;
+      transform: scale(0);
+      transition: fill $trans-dur $bezier, transform $trans-dur $bezier;
+    }
+    &-line {
+      stroke-dasharray: 12 13;
+      stroke-dashoffset: -13;
+    }
+    &-stroke {
+      stroke: #c7cad1;
+      transition: stroke $trans-dur;
+    }
+  }
+  &-label {
+    cursor: pointer;
+    padding: 0.125em;
+  }
+  @for $s from 1 through 4 {
+    &-label-delay#{$s} &-star-ring,
+    &-label-delay#{$s} &-star-fill,
+    &-label-delay#{$s} &-star-line,
+    &-label-delay#{$s} &-star-stroke {
+      animation-delay: 0.05s * $s;
+    }
+  }
+  &-input {
+    position: absolute;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  // display
+  &-input:hover ~ [data-rating]:not([hidden]) {
+    display: none;
+  }
+
+  &-input-1:hover ~ [data-rating="1"][hidden],
+  &-input-2:hover ~ [data-rating="2"][hidden],
+  &-input-3:hover ~ [data-rating="3"][hidden],
+  &-input-4:hover ~ [data-rating="4"][hidden],
+  &-input-5:hover ~ [data-rating="5"][hidden],
+  &-input:checked:hover ~ [data-rating]:not([hidden]) {
+    display: block;
+  }
+  // stars
+  &-input-1:hover ~ &-label:first-of-type &-star-stroke,
+  &-input-2:hover ~ &-label:nth-of-type(-n + 2) &-star-stroke,
+  &-input-3:hover ~ &-label:nth-of-type(-n + 3) &-star-stroke,
+  &-input-4:hover ~ &-label:nth-of-type(-n + 4) &-star-stroke,
+  &-input-5:hover ~ &-label:nth-of-type(-n + 5) &-star-stroke {
+    stroke: $yellow;
+    transform: scale(1);
+  }
+  &-input-1:checked ~ &-label:first-of-type &-star-ring,
+  &-input-2:checked ~ &-label:nth-of-type(-n + 2) &-star-ring,
+  &-input-3:checked ~ &-label:nth-of-type(-n + 3) &-star-ring,
+  &-input-4:checked ~ &-label:nth-of-type(-n + 4) &-star-ring,
+  &-input-5:checked ~ &-label:nth-of-type(-n + 5) &-star-ring {
+    animation-name: starRing;
+  }
+  &-input-1:checked ~ &-label:first-of-type &-star-stroke,
+  &-input-2:checked ~ &-label:nth-of-type(-n + 2) &-star-stroke,
+  &-input-3:checked ~ &-label:nth-of-type(-n + 3) &-star-stroke,
+  &-input-4:checked ~ &-label:nth-of-type(-n + 4) &-star-stroke,
+  &-input-5:checked ~ &-label:nth-of-type(-n + 5) &-star-stroke {
+    animation-name: starStroke;
+  }
+  &-input-1:checked ~ &-label:first-of-type &-star-line,
+  &-input-2:checked ~ &-label:nth-of-type(-n + 2) &-star-line,
+  &-input-3:checked ~ &-label:nth-of-type(-n + 3) &-star-line,
+  &-input-4:checked ~ &-label:nth-of-type(-n + 4) &-star-line,
+  &-input-5:checked ~ &-label:nth-of-type(-n + 5) &-star-line {
+    animation-name: starLine;
+  }
+  &-input-1:checked ~ &-label:first-of-type &-star-fill,
+  &-input-2:checked ~ &-label:nth-of-type(-n + 2) &-star-fill,
+  &-input-3:checked ~ &-label:nth-of-type(-n + 3) &-star-fill,
+  &-input-4:checked ~ &-label:nth-of-type(-n + 4) &-star-fill,
+  &-input-5:checked ~ &-label:nth-of-type(-n + 5) &-star-fill {
+    animation-name: starFill;
+  }
+  &-input-1:not(:checked):hover ~ &-label:first-of-type &-star-fill,
+  &-input-2:not(:checked):hover ~ &-label:nth-of-type(2) &-star-fill,
+  &-input-3:not(:checked):hover ~ &-label:nth-of-type(3) &-star-fill,
+  &-input-4:not(:checked):hover ~ &-label:nth-of-type(4) &-star-fill,
+  &-input-5:not(:checked):hover ~ &-label:nth-of-type(5) &-star-fill {
+    fill: $yellow-t;
+  }
+
+  &-sr {
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+  }
+}
+
+.rating-stars-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  background: $white-color;
+  padding: 1.5rem;
+
+  border-radius: 10px 10px 0 0;
+  box-shadow: $box-shadow-basic;
+
+  border-bottom: 5px solid $main-color;
+  
+  & textarea {
+    height: 80px;
+    border: 1px solid rgba($color: #000000, $alpha: .3);
+    border-radius: 5px;
+    padding: 1rem;
+    resize: vertical;
+  }
+
+  & p {
+    font-size: .875rem;
+  }
+
+  & button {
+    width: fit-content;
+    padding: .5rem 1.5rem;
+    border-radius: 5px;
+    background: $main-color;
+    color: $white-color;
+    font-weight: 500;
+  }
+}
+
+@keyframes starRing {
+  from,
+  20% {
+    animation-timing-function: ease-in;
+    opacity: 1;
+    r: 8px;
+    stroke-width: 16px;
+    transform: scale(0);
+  }
+  35% {
+    animation-timing-function: ease-out;
+    opacity: 0.5;
+    r: 8px;
+    stroke-width: 16px;
+    transform: scale(1);
+  }
+  50%,
+  to {
+    opacity: 0;
+    r: 16px;
+    stroke-width: 0;
+    transform: scale(1);
+  }
+}
+@keyframes starFill {
+  from,
+  40% {
+    animation-timing-function: ease-out;
+    transform: scale(0);
+  }
+  60% {
+    animation-timing-function: ease-in-out;
+    transform: scale(1.2);
+  }
+  80% {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes starStroke {
+  from {
+    transform: scale(1);
+  }
+  20%,
+  to {
+    transform: scale(0);
+  }
+}
+@keyframes starLine {
+  from,
+  40% {
+    animation-timing-function: ease-out;
+    stroke-dasharray: 1 23;
+    stroke-dashoffset: 1;
+  }
+  60%,
+  to {
+    stroke-dasharray: 12 13;
+    stroke-dashoffset: -13;
+  }
+}
+
+/****----****/
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  background: $white-color;
+  box-shadow: $box-shadow-category;
+  animation: fadeEffect 1s;
+}
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
